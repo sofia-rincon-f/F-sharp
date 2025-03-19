@@ -39,3 +39,11 @@ let listacapitales =    atlas |> List.map (fun (_,capital) -> capital)
 
 printfn $"{listapaises}"
 printfn $"{listacapitales}"
+
+
+// suma sencilla o el factorial de un número
+
+let Numbers = [1..10] |> List.suma
+
+
+

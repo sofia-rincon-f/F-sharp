@@ -108,3 +108,17 @@ let resultado4 = BusquedaporTelefono directorio telefonodado
 printfn ""
 printfn $"Buscar por telefono: {telefonodado}"
 printfn $"{resultado4}"
+
+// Porqué no podia hacerse con un telefono de tipo String
+
+let numeroUno = "120"
+let numeroDos ="20"
+
+let flag = numeroUno > numeroDos // Falso. El string evalua el primer digito en orden alfanumerico 
+
+
+let numeroUno1 = 120
+let numeroDos2 = 20
+
+let flag = numeroUno > numeroDos // Verdadero. El int evalua los números enteros.
+
