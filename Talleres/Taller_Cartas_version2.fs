@@ -125,15 +125,13 @@ let esUnaSecuencia2 cartas = //funcion más eficiente
 //[1;1]
 //
 
-let encontrarFullHouse cartas =
+let encontrarManoFull_For cartas =
     let valores = cartas |> List.map obtenerValorDeCarta
-    let grupos = valores |> List.groupBy |> List.map (fun (_, g) -> List.length g)
-    grupos |> List.sort = [2; 3] // Un FullHouse tiene un grupo de 3 y otro de 2
-
-let encontrarFourOfAKind cartas =
-    let valores = cartas |> List.map obtenerValorDeCarta
-    let grupos = valores |> List.groupBy |> List.map (fun (_, g) -> List.length g)
-    grupos |> List.exists (fun x -> x = 4) // Un FourOfAKind tiene un grupo de 4
+    let agrupar = valores|> List.groupBy (fun n -> n%2)
+    match agrupar |> List.sort with
+    | [1,[2]; 0,[3]] -> FullHouse
+    | [1,[1]; 0,[4]] | [0,[4]] -> FourOfAKind 
+    | _ -> Nada
 
 
 type Mano =
@@ -158,7 +156,7 @@ let evaluarMano mano =
     let cartasOrdenadas = mano |> ordenarMano
     match cartasOrdenadas |> mismaPintaEnLista with 
     | true -> cartasOrdenadas |> encontrarTipoDeFlush
-    | false -> Nada
+    | false -> cartasOrdenadas |> encontrarManoFull_For
 
 
 let ejemploMano2 =  [As Corazones; CartaNumero (8, Corazones); Rey Corazones; Jack Corazones; Reina Corazones]
