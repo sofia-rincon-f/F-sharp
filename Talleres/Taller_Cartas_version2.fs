@@ -125,6 +125,16 @@ let esUnaSecuencia2 cartas = //funcion más eficiente
 //[1;1]
 //
 
+let encontrarFullHouse cartas =
+    let valores = cartas |> List.map obtenerValorDeCarta
+    let grupos = valores |> List.groupBy id |> List.map (fun (_, g) -> List.length g)
+    grupos |> List.sort = [2; 3] // Un FullHouse tiene un grupo de 3 y otro de 2
+
+let encontrarFourOfAKind cartas =
+    let valores = cartas |> List.map obtenerValorDeCarta
+    let grupos = valores |> List.groupBy id |> List.map (fun (_, g) -> List.length g)
+    grupos |> List.exists (fun x -> x = 4) // Un FourOfAKind tiene un grupo de 4
+
 
 type Mano =
     | Nada 
