@@ -125,15 +125,6 @@ let esUnaSecuencia2 cartas = //funcion más eficiente
 //[1;1]
 //
 
-let encontrarManoFull_For cartas =
-    let valores = cartas |> List.map obtenerValorDeCarta
-    let agrupar = valores|> List.groupBy (fun n -> n%2)
-    match agrupar |> List.sort with
-    | [1,[2]; 0,[3]] -> FullHouse
-    | [1,[1]; 0,[4]] | [0,[4]] -> FourOfAKind 
-    | _ -> Nada
-
-
 type Mano =
     | Nada 
     | Flush
@@ -152,15 +143,31 @@ let encontrarTipoDeFlush cartas =
         Flush 
 
 
+let encontrarManoFull_Four cartas =
+    let valores = cartas |> List.map obtenerValorDeCarta 
+
+    let agrupar = 
+        valores 
+        |> List.groupBy (fun e -> e) 
+        |> List.map (fun (_, grupo) -> List.length grupo)
+
+    match agrupar with 
+    | [3; 2] -> FullHouse 
+    | [4; 1] | [4] -> FourOfAKind 
+    | _ -> Nada 
+
+
 let evaluarMano mano = 
     let cartasOrdenadas = mano |> ordenarMano
     match cartasOrdenadas |> mismaPintaEnLista with 
     | true -> cartasOrdenadas |> encontrarTipoDeFlush
-    | false -> cartasOrdenadas |> encontrarManoFull_For
+    | false -> cartasOrdenadas |> encontrarManoFull_Four
 
 
-let ejemploMano2 =  [As Corazones; CartaNumero (8, Corazones); Rey Corazones; Jack Corazones; Reina Corazones]
+let ManoGanadora = [Rey Treboles; Rey Diamantes; Rey Corazones; Rey Picas; Reina Diamantes]
 
-let testultimo = ejemploMano2 |> evaluarMano
+let testManoGanadora = ManoGanadora|> evaluarMano
 
-printfn $"Valor es: {testultimo}"
+printfn $"Valor es: {testManoGanadora}"
+
+
