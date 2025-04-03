@@ -45,3 +45,100 @@ printfn $"{listaNueva}"
 // List.head = Retorna la cabeza de la lista 
 // List.find = busca un elemento en la lista PERO explota si no lo encuentra
 // List.tryFind = retorna una opcion del valor Some(value) si lo encuentra None si no lo encuentra
+
+let Lista1 = ["Hola";"Mundo";"Feliz"]
+
+Lista1 
+|> List.iter (fun elemento -> printfn $"{elemento}")    // List.iter itera la lista, no imprime nada 
+
+
+let head = Lista1 |> List.head                          // List.head busca el primer elemento de la lista 
+
+printfn $"cabeza: {head}"
+
+
+
+
+
+
+
+
+
+let buscarPorPrimeraLetra letra =
+    Lista1 
+    |> List.tryFind (fun elemento -> letra = elemento[0])   // List.tryFind busca un elemento 
+
+
+match 
+    buscarPorPrimeraLetra 'F'
+with 
+    | Some (value) -> printfn $"Encontr: {value}"
+    | None -> printfn "No se encontro nada"
+
+
+let test =
+    unaLista 
+    |> List.forall (fun elemento -> elemento % 2 <> 0 )   // List.forall aplica una condiccin boleana y todos deben cumplir la condicion 
+
+printfn $"{test}"
+
+
+
+
+
+
+                                                            
+                                                            
+                                                            
+let test1 = 
+    unaLista 
+    |> List.sort                    // List.sort organiza una lista de elemntos basicos, faciles de comparar 
+
+    |> List.rev                     // List.rev pone la lista alreves 
+
+printfn $"{test1}"
+
+
+
+
+
+
+
+type Directorio = {
+    Nombre: string
+    Cedula: int 
+}
+
+let lista2 = [
+    {Nombre = "Leo"; Cedula = 9}
+    {Nombre = "Dharen" ; Cedula = 10}
+    {Nombre = "Sofia" ; Cedula = 8}
+    {Nombre = "Stefany" ; Cedula = 7}
+]
+
+let test3 =
+    lista2 
+    |>List.sortBy (fun elemento -> elemento.Nombre) //List.sortBy organiza lista de elementos mas complejos (listas,tuplas,records)
+    |>List.map (fun elemento -> elemento.Cedula)    //List.map transforma la lista en otra cumpliendo la condicion que le pogamos 
+
+printfn $"{test3}"
+
+
+
+
+type Portafolio = {
+    Banco: string
+    Saldo: decimal                            // decimal es otro tipo de notacion, se escribe copn m 
+}
+
+let Lista4 = [
+    {Banco = "Bancolombia"; Saldo = 1234.45m}
+    {Banco = "ScotiaBank"; Saldo = 5000.6m}
+    {Banco = "Davivienda"; Saldo = 50009.67m}
+]                                      
+
+let test4 =
+    Lista4
+    |>List.fold (fun acumulador elemento -> elemento.Saldo + acumulador) 10m  //List.fold tiene una funcion de un elemento y un acumulador. despues le doy el valor de inicio 
+
+printfn $"{test4}"
