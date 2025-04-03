@@ -1,124 +1,172 @@
-Crear una base de datos de un directorio que contenga nombre, apellido, telefono, direccion e Email
+// Union discriminada. Obligatori que los elementos esten en mayuscula
 
-con minimo 5 elementos (records)
+type Colores = 
+    | Blanco
+    | Rojo
+    | Negro
+    | RGB of int*int*int
+    | HSV of int*int*int
+    | RGBA of float*float*float*float
 
-Funciones a realizar:
-1. Retorne por orden alfabetico de apellido todo el record
-2. Busque por telefono y retorne todo el record
-3. Retorne los telefonos organizados alfabeticamente por apellido.
+type Tipos = 
+    | Blanco 
+    | Criculo 
+    | Tripode 
 
-type Directorio = 
-    {
-        Nombre: string
-        Apellido: string
-        Telefono: int
-        Direccion: string
-        Email: string
-    }
-
-
-let directorio = 
-    [
-        {
-            Nombre = "Batman"
-            Apellido ="Wayne"
-            Telefono = 44881234
-            Direccion = "El edificio wayne"
-            Email = "No tengo"
-        }
-        {
-            Nombre = "Bucky"
-            Apellido ="Barnes"
-            Telefono = 98678545
-            Direccion = "Brooklyn"
-            Email = "wintersoldier@aven.us"
-        }
-        {
-            Nombre = "Peter"
-            Apellido ="Quill"
-            Telefono = 00000000
-            Direccion = "Milano"
-            Email = "starlord@guardian.nov"
-        }
-        {
-            Nombre = "Chris"
-            Apellido ="Williams"
-            Telefono = 14000130
-            Direccion = "Crra sur"
-            Email = "c.will@gmail.com"
-        }
-        {
-            Nombre = "Johan"
-            Apellido ="Obrian"
-            Telefono = 30311102
-            Direccion = "Inglaterra"
-            Email = "david-williams@gmail.com"
-        }
-    ]
+let miColor= Colores.Blanco
+let otroColor = RGBA(1.0, 1.0, 1.0, 0.6)
 
 
-// Punto 1 Retornar los Records organizados por Apellido.
+// 😼 Los Maps ni  Sets son ordenados. Solo Array y Listas
 
-let ordenAlfabetico (records: Directorio list) =
-    records
-    |> List.sortBy (fun r -> r.Apellido)
-
-let resultado1 = ordenAlfabetico directorio
-
-printfn "Por orden alfabetico de apellido:"
-printfn $" {resultado1}"
+// 🤠 cabeza primer elemento Cola el resto de la lista
 
 
-// Punto 2 Retornar los Records organizados por telefono.
 
-let ordenporTelefono (records: Directorio list) =
-    records 
-    |> List.sortBy (fun r -> r.Telefono)
+let unaLista = [10;2;3]                         // heas es 10 y tail es 2;3
+let otraLista = [2]                             // head es 2 y tail es []
 
-let resultado2 = ordenporTelefono directorio
+let unaListaCons = 10 :: [2;3]
+let otraListaCons = 2 :: []                     //Cons Parcial 
 
-printfn ""
-printfn "Por orden numerico del telefono:"
-printfn $"{resultado2}"
-
-
-// Punto 3 Retorne los telefonos ordenados por apellido.
-
-let telefonorOrdenadosporApellido () =
-    directorio 
-    |> List.sortBy (fun r -> r.Apellido)
-    |> List.map (fun r -> r.Telefono)
-
-let resultado3 = telefonorOrdenadosporApellido ()
-
-printfn ""
-printfn "Telefonos ordenados por apellidos:"
-printfn $"{resultado3}"
-
-//Punto 2 corregido
+match unaLista with 
+    | x :: y  -> printfn $"{x} -> {y}"
+    | [] -> printfn "Lista Vacia"
 
 
-let BusquedaporTelefono (records: Directorio list) telefono =
-    records 
-    |> List.tryFind (fun r -> r.Telefono = telefono)
-        
-let telefonodado =  98678545
-let resultado4 = BusquedaporTelefono directorio telefonodado
-
-printfn ""
-printfn $"Buscar por telefono: {telefonodado}"
-printfn $"{resultado4}"
-
-// Porqué no podia hacerse con un telefono de tipo String
-
-let numeroUno = "120"
-let numeroDos ="20"
-
-let flag = numeroUno > numeroDos // Falso. El string evalua el primer digito en orden alfanumerico 
+let listaNueva = otraLista @ unaLista               // que la primera lista sea más pequeña que la segunda
+                                                    // que ambas listas sean del mismo elemento
+printfn $"{listaNueva}"
 
 
-let numeroUno1 = 120
-let numeroDos2 = 20
+// List module 
 
-let flag = numeroUno > numeroDos // Verdadero. El int evalua los números enteros.
+// List.iter = Recorre, más no retorna nada
+// List.head = Retorna la cabeza de la lista 
+// List.find = busca un elemento en la lista PERO explota si no lo encuentra
+// List.tryFind = retorna una opcion del valor Some(value) si lo encuentra None si no lo encuentra
+
+let listaUno = ["Hola"; "Mundo";"nuevo"]
+
+
+listaUno
+|> List.iter (fun elemento -> printfn $"{elemento}") //unit
+
+let head = listaUno |> List.head
+
+printfn $"Cabeza: {head}"
+
+let buscarPorprimeraLetra letra =
+    listaUno
+    |> List.tryFind (fun elemento -> letra = elemento[0])
+
+match 
+    buscarPorprimeraLetra 'n' // char
+with 
+    | Some(value) ->printfn $"Encontré {value}"
+    | None -> printfn "No se encontró nada"
+
+// List.forall aplica una función booleana a cada elemento y retorna verdadero si la función es verdadera para TODOS los elementos
+
+let listaNumeros = [1..2..20]
+
+let test =
+    listaNumeros
+    |> List.forall (fun e -> e % 2 = 0) // FALSO
+
+let test2 =
+    listaNumeros
+    |> List.forall (fun a -> a % 2 <> 0) // VERDADERO
+
+printfn $"{test}"
+printfn $"{test2}"
+
+
+// List.sort Organiza elementos basicos faciles de comparar (int, string, floats)
+
+// List.sortBy organiza elementos más completos (Listas, records, tuplas)
+// List.filter parcial 
+// List.rev reversa la lista
+
+let sortLista = [3;4;7;9;10;2;1]
+
+let testsort =
+    sortLista
+    |> List.sort
+    |> List.rev
+
+printfn $"{testsort}"
+
+// Practicar organizar bien la lista de bancos alfabeticamente 
+
+// TRANSFORMACIONES
+
+
+// Tomar una lista y convertirla: en escalar o vectorial (Las listas son vectores)
+
+
+// List.map de una lista a otra (de vector a vector)
+
+// List.fold toma un vector y lo vuelve escalar (una lista de varios elementos que retona un solo elemento)
+
+
+// Ejemplo desde sortBy
+
+type RecordsSort = {
+        Nombre : string
+        Cedula: int
+}
+
+
+let ListaRecords = [
+    {Nombre = "Leo"; Cedula = 10}
+    {Nombre = "UTP"; Cedula = 1}
+]
+
+let testRecord =
+    ListaRecords
+    |> List.sortBy (fun elemento -> elemento.Cedula) // Ordena por cedula
+
+let Map = 
+    ListaRecords
+    |> List.map ( fun elemento -> elemento.Nombre) // Hara una lista de salida solo de nombres
+
+
+printfn $"{testRecord}"
+
+printfn $"{Map}"
+
+let numeros = [1..10]
+
+
+let Map2 = 
+    numeros
+    |> List.map ( fun elemento -> elemento*4+5) // Operacion matematica
+
+
+
+//Fold 
+
+type Portafolio = {
+        Banco: string
+        Saldo: decimal // En programas financieros es necesario usar decimal. Caben casi todos los numeros
+}
+
+
+let ListaFold = [
+    {Banco = "Bancolombia"; Saldo = 1234.45m} // m letra de decimal
+    {Banco = "Nu"; Saldo = 5000.6m}
+    {Banco = "Falabella"; Saldo = 50009.67m}
+]
+
+
+let fold = 
+    ListaFold
+    |> List.fold ( fun acumulador elemento -> elemento.Saldo+acumulador) 0m // el 0 es el "pasado" de mi acumulador. Aquí sumaremos todo nuestro saldo
+    // List.map (fun e ->e.Saldo)
+    // List.sum  //Solución alterna.
+printf $"{fold}"
+
+
+// Factoriales Parcial
 

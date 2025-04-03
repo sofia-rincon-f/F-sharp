@@ -16,7 +16,7 @@ type CartaDeJuego =
     | Rey of Pinta
     | Reina of Pinta
     | Jack of Pinta
-    | CartaNumero of int * Pinta // Quizz, que tyipo es este?
+    | CartaNumero of int * Pinta // Esta es una tupla
 
 //
 // Helper functions for the big homework
@@ -79,6 +79,13 @@ let obtenerValorDePinta carta =
     | Corazones -> 3
     | Diamantes -> 4
 
+//
+// Esta funcion compara dos cartas usando el standard
+// de la funcion compare (-1,0,1)
+//
+// Esta funcion compara el suit primero, y luego el 
+// valor de la carta
+//
 let compararCartas carta1 carta2 =
     let pinta1 = carta1 |> obtenerValorDePinta
     let pinta2 = carta2 |> obtenerValorDePinta
@@ -91,38 +98,120 @@ let compararCartas carta1 carta2 =
             let valor1 = carta1 |> obtenerValorDeCarta
             let valor2 = carta2 |> obtenerValorDeCarta
             compare valor1 valor2
+
+
 //
+// Ordenar las cartas es muy facil ahora, solo tenemos
+// que usar nuestra funcion de comparación
 //
-// funcion que ordena la mano dada
+
+let ordenarMano cartas =
+    cartas
+    |> List.sortWith compararCartas
+
+let test2 = ordenarMano [As(Treboles);CartaNumero(10,Corazones);Rey(Treboles);CartaNumero(3,Corazones)]
+
+printfn "Mano ordernada"
+test2 |> List.iter (fun e -> printfn $"{e}")
+
 //
+// Necesitamos una funcion que  nos diga
+// si una lista de cartas esta en secuencia.
+// Se asume que la lista esta ordenada.
 //
-let ordenarMano cartas = 
-    cartas |> List.sortWith compararCartas
-
-let test2 = ordenarMano [As(Treboles); CartaNumero(10, Corazones); Rey(Treboles); CartaNumero(3, Corazones)]
-
-printfn "Mano ordenada"
-
-test2 |> List.iter(fun e -> printfn $"{e}")
-
-
-// Secuencia que retorna un bool 
-
 let esUnaSecuencia cartas =
-    cartas 
-    |> List.map obtenerValorDeCarta // A partir de una lista ordenada de cartas nos retorna una lista con el valor de cada carta
-    |> List.pairwise // Crea una lista de tuplas
-    |> List.map (fun (e1, e2) -> e2-e1) // Hacemos la diferencia del elemento e2 - e1 
-    |> List.forall (fun e -> e=1) // si el resultado de cada tupla es 1 retorna true, de lo conrario no es una secuencia
+    cartas
+    // Solo nos interesa el valor de la carta
+    |> Seq.map obtenerValorDeCarta
+    //Pairwise retorna una tupla de dos elementos
+    |> Seq.pairwise
+    // Con los pares calculamos la diferencia 
+    |> Seq.map (fun (e1,e2) -> e2 - e1)
+    // Chequeamos que todos sean 1
+    |> Seq.forall (fun e -> e = 1)
+
+let manoEjemplo = 
+    [
+        CartaNumero(8,Corazones)
+        CartaNumero(8,Treboles)
+        CartaNumero(8,Diamantes)
+        CartaNumero(9,Picas) 
+        CartaNumero(9,Diamantes)
+    ]
+let testSecuencia = 
+    manoEjemplo
+    |> ordenarMano
+    |> esUnaSecuencia
+
+printfn $"Resultado de secuencia: {testSecuencia}"
 
 
-// [CartaNumero(10, Corazones);Jack(Corazones);Reina(Corazones);Rey(Corazones);As(Corazones)]
-//[10;11;12;13;14]
-//[(10,11)(11,12);(12,13);(13,14)]
-//[1;1;1;1] true
+//
+// Esta union de Mano, nos da el tipo y el valor
+// a la vez (es el orden de la declaracion)
+type Mano =
+    | Nada
+    | Pair
+    | TwoPairs
+    | ThreeOfAKind
+    | Straight
+    | Flush
+    | FullHouse 
+    | FourOfAKind
+    | StraightFlush
+    | RoyalFlush
 
-let manoEjemplo = [CartaNumero(10, Corazones);Jack(Corazones);Reina(Corazones);Rey(Corazones);As(Corazones)]
-    
-let testSecuencia = manoEjemplo |> esUnaSecuencia
 
-printfn $"Secuencia es: {testSecuencia}"
+//
+// Esta funcion busca un tipo basico de mano
+// las cartas deben ir en orden y tener la misma
+// pinta
+let encontrarTipoDeFlush cartas =
+    //
+    // Miremos si hay una sequencia
+    //
+    if cartas |> esUnaSecuencia then
+        match cartas |> List.head with
+        | CartaNumero(10,_) -> RoyalFlush
+        | _ -> StraightFlush
+    else
+        Flush
+
+
+let testFlush = manoEjemplo |> ordenarMano |> encontrarTipoDeFlush
+printfn $"Tipo de flush: {testFlush}"
+
+//
+// Esta funcion busca un Full House, y four of a kind.
+// Esta funcion requiere que las cartas esten en orden.
+//
+let encontrarOtrasManos cartas =
+    if cartas |> esUnaSecuencia then
+            Straight
+        else
+            // Buscamos dos combinaciones, una de 3 y 2
+            // Y otrade 4 iguales.
+            match cartas 
+                |> List.groupBy obtenerValorDeCarta
+                |> List.sortBy (fun (_,e) -> e |> List.length) 
+            with
+            | [(_,[_]);(_,[_]);(_,[_]);(_,[_;_])] -> Pair
+            | [(_,[_;_]);(_,[_;_;_])] -> FullHouse
+            | [(_,[_]);(_,[_;_;_;_])] -> FourOfAKind
+            | _ -> Nada
+
+//
+// Implementacion parcial de evaluar mano.
+// Esta es la funcion principal de la tarea,
+// ya cubrimos 3 de los 5 casos con los Flush
+// Solo queda implementar el resto.
+//
+
+let evaluarMano cartas =
+    let cartasOrdenadas = cartas |> ordenarMano
+    match cartasOrdenadas |> mismaPintaEnLista with
+    | true -> cartasOrdenadas |> encontrarTipoDeFlush
+    | false -> cartasOrdenadas |> encontrarOtrasManos
+
+let testMano = manoEjemplo |> evaluarMano
+printfn $"Valor de la mano: {testMano}"
