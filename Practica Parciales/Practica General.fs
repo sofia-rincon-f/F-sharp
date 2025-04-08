@@ -188,7 +188,7 @@ DIAN Ejemplo de una lista de Records:
 
     1. 
 
-Refactoring
+Refactoring:
     // Antes: Código imperativo
     let sumaListaImperativa lista =
         let mutable suma = 0
@@ -200,8 +200,45 @@ Refactoring
     let sumaListaFuncional lista =
         List.fold (+) 0 lista
 
-Secuencias 
-Maping
+Secuencias:
+    // Ejemplo de secuencias (Seq)
+
+    let numeros = seq { 1 .. 10 } // Secuencia de números del 1 al 10
+
+    // Secuencia infinita de números pares
+    let pares = Seq.initInfinite (fun i -> i * 2)
+
+    // Tomar los primeros 10 números pares
+    let primerosDiezPares = pares |> Seq.take 10 |> Seq.toList
+
+    // Filtrar números mayores a 5
+    let mayoresA5 = numeros |> Seq.filter (fun x -> x > 5)
+
+    // Mapear para duplicar los valores
+    let duplicados = numeros |> Seq.map (fun x -> x * 2)
+
+    // Imprimir resultados
+    printfn $"Números: {numeros |> Seq.toList}"
+    printfn $"Primeros 10 pares: {primerosDiezPares}"
+    printfn $"Mayores a 5: {mayoresA5 |> Seq.toList}"
+    printfn $"Duplicados: {duplicados |> Seq.toList}"
+
+Maping:
+    // Ejemplo de mapeo (Mapping)
+
+    let numeros = [1; 2; 3; 4; 5]
+
+    // Mapear para duplicar los valores
+    let duplicados = List.map (fun x -> x * 2) numeros
+
+    // Mapear para convertir números a cadenas
+    let comoCadenas = List.map string numeros
+
+    // Imprimir resultados
+    printfn $"Números originales: {numeros}"
+    printfn $"Números duplicados: {duplicados}"
+    printfn $"Números como cadenas: {comoCadenas}"
+
 Cartas Uniones discriminadas
 Eleciones 
 
