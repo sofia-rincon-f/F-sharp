@@ -14,7 +14,6 @@ Elementos esenciales:
             e. Juego de cartas
             f. Elecciones
 
-
 Tuplas: 
     let tupla = (1, "hola") //Creación
 
@@ -145,11 +144,45 @@ Array (Arreglos):
         arreglo.[0] <- 10 // Cambia el primer elemento a 10
         
     3. Operaciones con Arrays
+        Array.length // Retorna la longitud del arreglo
+        Array.map // Aplica una función a cada elemento del arreglo y devuelve un nuevo arreglo.
+        Array.filter // Filtra los elementos del arreglo según una condición.
+        Array.fold // Acumula un valor aplicando una función a cada elemento del arreglo.
+        Array.iter // Aplica una función a cada elemento del arreglo sin devolver nada.
+        Array.sort // Ordena el arreglo.
+        Array.concat // Concatena varios arreglos en uno solo.
+
+    4. Ejemplo entero
     
-    4. Transformaciones
+        let array = [| 1; 2; 3; 4; 5 |]
+
+        // Transformaciones
+        let arrayDoble = Array.map (fun x -> x * 2) array
+        let arrayPares = Array.filter (fun x -> x % 2 = 0) array
+
+        // Reducción
+        let suma = Array.fold (+) 0 array
+
+        // Búsqueda
+        let primeroMayorQueTres = Array.find (fun x -> x > 3) array
+
+        // Ordenación
+        let arrayOrdenado = Array.sort array
+
+        // Concatenación
+        let nuevoArray = Array.append array [| 6; 7 |]
+
+        printfn $"Array original: {array}"
+        printfn $"Array doble: {arrayDoble}"
+        printfn $"Array pares: {arrayPares}"
+        printfn $"Suma: {suma}"
+        printfn $"Primero mayor que tres: {primeroMayorQueTres}"
+        printfn $"Array ordenado: {arrayOrdenado}"
+        printfn $"Nuevo array: {nuevoArray}"
 
 
 
+//──────────────────────────── ୨୧ ─────────────────────────────────
 Dian ejemplo Records
 
     1. En este ejemplo, iniciamos declarando una variable, llamada 
