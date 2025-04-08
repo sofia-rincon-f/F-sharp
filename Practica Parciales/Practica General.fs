@@ -1,7 +1,8 @@
 Orden estudio: 
         1. Tuplas
         2. Listas (modulos)
-        3. Opcionales -> Uniones discriminadas (modulos)
+        3. Opcionales 
+            -> Uniones discriminadas (modulos)
         4. Records (modulos)
         5. Array (Arreglos modulos)
 
@@ -33,7 +34,7 @@ Tuplas:
     // Nota: Las tuplas tambien se identifican así: elemento1 * elemento2 en casos de Union discriminada. 
     //Para let puede escribirse sin parentesis 
 
-Listas
+Listas:
     List.forAll // Verifica si todos los elementos de la lista cumplen una condición.
 
     List fold   // Acumula un valor aplicando una función a cada elemento de la lista.
@@ -57,10 +58,12 @@ Listas
     List.filter // Filtra los elementos de la lista según una condición.
     List.iter // Aplica una función a cada elemento de la lista sin devolver nada.
 
-Optionals y Uniones Discriminadas
-    Tipos de casos. Cada caso puede contener datos adicionales.
+Optionals y Uniones Discriminadas:
     
-    //Ejemplo Union discriminada
+    Las uniones discriminadas son tipos de casos. 
+    Cada caso puede contener datos adicionales.
+    
+    Ejemplo Union discriminada:
         type Colores =
         | Blanco
         | Rojo
@@ -79,10 +82,12 @@ Optionals y Uniones Discriminadas
             | Blanco -> "Es blanco"
             | Rojo -> "Es rojo"
             | Negro -> "Es negro"
-            | RGB(r, g, b) -> $"RGB con valores: {r}, {g}, {b}"
-            | RGBA(r, g, b, a) -> $"RGBA con valores: {r}, {g}, {b}, {a}"    
+            | RGB(r, g, b) -> 
+                $"RGB con valores: {r}, {g}, {b}"
+            | RGBA(r, g, b, a) -> 
+                $"RGBA con valores: {r}, {g}, {b}, {a}"    
     
-    //Ejemplo de opcional
+    Ejemplo de opcional:
         type Option<'T> =
         | Some of 'T
         | None
@@ -97,13 +102,14 @@ Optionals y Uniones Discriminadas
         | Some(valor) -> $"El valor es {valor}"
         | None -> "No hay valor"
 
-        // MODULO Option
-        //Map:
-        let opcion = Some(10)
-        let resultado = opcion |> Option.map (fun x -> x * 2) // Resultado: Some(20)
+        Modulos de Option
+            Map:
+            let opcion = Some(10)
+            let resultado = opcion |> Option.map (fun x -> x * 2) // Resultado: Some(20)
 
-Records
-    //Ejemplo 
+Records:
+    
+    Ejemplo 
     type Persona = // Propiedades
         { Nombre: string
         Edad: int }   
@@ -114,42 +120,35 @@ Records
 
     let persona2 = { persona1 with Edad = 35 } // Copia y modifica una propiedad
 
-Array (Arreglos)
-    Creación de Arrays:
+Array (Arreglos):
 
-    Puedes crear un array con valores específicos, un rango de números o inicializarlo con una función.
-    Ejemplo: Crear un array con valores [1, 2, 3] o un rango de números del 1 al 10.
-    Acceso a Elementos:
+    1. Creación de Arrays
 
-    Los elementos de un array se acceden por su índice, comenzando desde 0.
-    Ejemplo: Obtener el tercer elemento de un array o modificarlo asignándole un nuevo valor.
-    Propiedades del Array:
+        let arreglo1 = [| 1; 2; 3 |] // Arreglo de enteros
+        let arreglo2 = [| "Hola"; "Mundo" |] // Arreglo de cadenas
+        let arreglo3 = [| 1; "Hola"; 3.14 |] // Arreglo de diferentes tipos
 
-    Puedes obtener la longitud del array, que indica cuántos elementos contiene.
-    Transformaciones:
+        //Crear un array con un rango
+        let arreglo4 = [| 1 .. 10 |] // Arreglo de enteros del 1 al 10
 
-    Aplicar una función a cada elemento del array para transformarlo y devolver un nuevo array.
-    Filtrar los elementos que cumplen una condición específica.
-    Iterar sobre cada elemento del array para realizar una acción (sin devolver nada).
-    Reducción y Acumulación:
+        //Crear un array inicializado con una funcion:
+        let arreglo5 = Array.init 5 (fun i -> i * 2) // Arreglo de enteros: [| 0; 2; 4; 6; 8 |]
 
-    Acumular un valor aplicando una función a cada elemento del array.
-    Reducir el array a un solo valor, como encontrar el máximo o sumar todos los elementos.
-    Búsqueda:
+    2. Acceso a Elementos
 
-    Encontrar el primer elemento que cumple una condición específica.
-    Buscar un elemento y devolverlo como una opción (Some si se encuentra, None si no).
-    Ordenación:
+        let arreglo = [| 1; 2; 3; 4; 5 |]
 
-    Ordenar los elementos del array en orden ascendente o descendente.
-    Ordenar los elementos según una clave específica.
-    Concatenación y Subarrays:
+        //Acceso a un elemento por indice
+        let elemento = arreglo.[0] // Acceso al primer elemento
 
-    Combinar dos arrays en uno solo.
-    Obtener un subarray seleccionando un rango de índices.
-    Conversión:
+        //Modificar un elemento (Los arreglos son mutables)
+        arreglo.[0] <- 10 // Cambia el primer elemento a 10
+        
+    3. Operaciones con Arrays
+    
+    4. Transformaciones
 
-    Convertir un array a una lista o una lista a un array.
+
 
 Dian ejemplo Records
 
