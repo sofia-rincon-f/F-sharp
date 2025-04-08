@@ -182,7 +182,8 @@ Array (Arreglos):
 
 
 
-//──────────────────────────── ୨୧ ─────────────────────────────────
+//──────────────────────── ୨୧ ──────────────────────────
+
 Dian ejemplo Records
 
     1. En este ejemplo, iniciamos declarando una variable, llamada 
