@@ -57,6 +57,38 @@
     List.filter // Filtra los elementos de la lista según una condición.
     List.iter // Aplica una función a cada elemento de la lista sin devolver nada.
 
+
+// Optionals y Uniones Discriminadas
+    Tipos de casos. Cada caso puede contener datos adicionales.
+    
+    //Ejemplo Union discriminada
+        type Colores =
+        | Blanco
+        | Rojo
+        | Negro //Casos simple
+        | RGB of int * int * int // caso con constantes (Tupla de tres enteros)
+        | RGBA of float * float * float * float
+
+        //Valores
+        let color1 = Blanco
+        let color2 = RGB(255, 0, 0)
+        let color3 = RGBA(0.5, 0.5, 0.5, 1.0)
+
+        //Patron de coincidencia
+        let describirColor color =
+            match color with
+            | Blanco -> "Es blanco"
+            | Rojo -> "Es rojo"
+            | Negro -> "Es negro"
+            | RGB(r, g, b) -> $"RGB con valores: {r}, {g}, {b}"
+            | RGBA(r, g, b, a) -> $"RGBA con valores: {r}, {g}, {b}, {a}"    
+    //Ejemplo de opcional
+        
+
+// Records
+
+// Array (Arreglos)
+
 // Dian ejemplo Records
 
     1. En este ejemplo, iniciamos declarando una variable, llamada 
