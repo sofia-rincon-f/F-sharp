@@ -1,20 +1,20 @@
-// Orden estudio 
-        //1. Tuplas
-        //2. Listas (modulos)
-        //3. Opcionales -> Uniones discriminadas (modulos)
-        //4. Records (modulos)
-        //5. Array (Arreglos modulos)
+Orden estudio: 
+        1. Tuplas
+        2. Listas (modulos)
+        3. Opcionales -> Uniones discriminadas (modulos)
+        4. Records (modulos)
+        5. Array (Arreglos modulos)
 
-//Elementos esenciales:
-            //Ejercicio de calcular impuestos
-            //Refactoring
-            //Seq (función perezosa)
-            //Maping (Transformación)
-            //Juego de cartas
-            //Elecciones
+Elementos esenciales:
+            a. Ejercicio de calcular impuestos
+            b. Refactoring
+            c. Seq (función perezosa)
+            d. Maping (Transformación)
+            e. Juego de cartas
+            f. Elecciones
 
 
-// Tuplas 
+Tuplas: 
     let tupla = (1, "hola") //Creación
 
     let primero = fst tupla // acceso a tupla de dos elementos
@@ -33,8 +33,8 @@
     // Nota: Las tuplas tambien se identifican así: elemento1 * elemento2 en casos de Union discriminada. 
     //Para let puede escribirse sin parentesis 
 
-// Listas
-    List.forAll  // Verifica si todos los elementos de la lista cumplen una condición.
+Listas
+    List.forAll // Verifica si todos los elementos de la lista cumplen una condición.
 
     List fold   // Acumula un valor aplicando una función a cada elemento de la lista.
 
@@ -57,8 +57,7 @@
     List.filter // Filtra los elementos de la lista según una condición.
     List.iter // Aplica una función a cada elemento de la lista sin devolver nada.
 
-
-// Optionals y Uniones Discriminadas
+Optionals y Uniones Discriminadas
     Tipos de casos. Cada caso puede contener datos adicionales.
     
     //Ejemplo Union discriminada
@@ -82,24 +81,87 @@
             | Negro -> "Es negro"
             | RGB(r, g, b) -> $"RGB con valores: {r}, {g}, {b}"
             | RGBA(r, g, b, a) -> $"RGBA con valores: {r}, {g}, {b}, {a}"    
+    
     //Ejemplo de opcional
-        
+        type Option<'T> =
+        | Some of 'T
+        | None
 
-// Records
+        //Crear un valor opcional
+        let valor1 = Some(42)
+        let valor2 = None
 
-// Array (Arreglos)
+        //Patron de coindicencia 
+        let procesarOpcion opcion =
+        match opcion with
+        | Some(valor) -> $"El valor es {valor}"
+        | None -> "No hay valor"
 
-// Dian ejemplo Records
+        // MODULO Option
+        //Map:
+        let opcion = Some(10)
+        let resultado = opcion |> Option.map (fun x -> x * 2) // Resultado: Some(20)
+
+Records
+    //Ejemplo 
+    type Persona = // Propiedades
+        { Nombre: string
+        Edad: int }   
+
+    let persona1 = { Nombre = "Juan"; Edad = 30 } // Creación
+
+    printfn $"Nombre: {persona1.Nombre}, Edad: {persona1.Edad}" //Acceso a las propiedades
+
+    let persona2 = { persona1 with Edad = 35 } // Copia y modifica una propiedad
+
+Array (Arreglos)
+    Creación de Arrays:
+
+    Puedes crear un array con valores específicos, un rango de números o inicializarlo con una función.
+    Ejemplo: Crear un array con valores [1, 2, 3] o un rango de números del 1 al 10.
+    Acceso a Elementos:
+
+    Los elementos de un array se acceden por su índice, comenzando desde 0.
+    Ejemplo: Obtener el tercer elemento de un array o modificarlo asignándole un nuevo valor.
+    Propiedades del Array:
+
+    Puedes obtener la longitud del array, que indica cuántos elementos contiene.
+    Transformaciones:
+
+    Aplicar una función a cada elemento del array para transformarlo y devolver un nuevo array.
+    Filtrar los elementos que cumplen una condición específica.
+    Iterar sobre cada elemento del array para realizar una acción (sin devolver nada).
+    Reducción y Acumulación:
+
+    Acumular un valor aplicando una función a cada elemento del array.
+    Reducir el array a un solo valor, como encontrar el máximo o sumar todos los elementos.
+    Búsqueda:
+
+    Encontrar el primer elemento que cumple una condición específica.
+    Buscar un elemento y devolverlo como una opción (Some si se encuentra, None si no).
+    Ordenación:
+
+    Ordenar los elementos del array en orden ascendente o descendente.
+    Ordenar los elementos según una clave específica.
+    Concatenación y Subarrays:
+
+    Combinar dos arrays en uno solo.
+    Obtener un subarray seleccionando un rango de índices.
+    Conversión:
+
+    Convertir un array a una lista o una lista a un array.
+
+Dian ejemplo Records
 
     1. En este ejemplo, iniciamos declarando una variable, llamada 
 
-//Eleciones 
-//Intro (Busqueda de paises) Listas modulos
-//Map ejemplo
-//Ejemplo paises 
+Eleciones 
+Intro (Busqueda de paises) Listas modulos
+Map ejemplo
+Ejemplo paises 
     //Con listas de tuplas
     //Con listas de records
-//Monedas
-//Record avanzado
-//Cartas Uniones discriminadas
+Monedas
+Record avanzado
+Cartas Uniones discriminadas
 
