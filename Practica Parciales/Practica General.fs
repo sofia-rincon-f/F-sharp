@@ -186,41 +186,20 @@ Array (Arreglos):
 
 DIAN Ejemplo de una lista de Records:
 
-    //Hacemos conversión de UVT a pesos y viceversa
-    let uvtFactor = 47065.0
-    let uvtToPesos x = x * uvtFactor
-    let pesosToUvt x = x / uvtFactor
-
-    // Tabla de rangos de impuestos
-    type TaxBrackets = { RangoBajo: float; RangoAlto: float; Impuesto: float; Base: float }
-    let dianTable = [
-        { RangoBajo = 0.0; RangoAlto = 1090.0; Impuesto = 0.0; Base = 0.0 }
-        { RangoBajo = 1090.0; RangoAlto = 1700.0; Impuesto = 0.19; Base = 0.0 }
-        { RangoBajo = 1700.0; RangoAlto = 4100.0; Impuesto = 0.28; Base = 116.0 }
-        { RangoBajo = 4100.0; RangoAlto = 8670.0; Impuesto = 0.33; Base = 788.0 }
-        { RangoBajo = 8670.0; RangoAlto = 18970.0; Impuesto = 0.35; Base = 2296.0 }
-        { RangoBajo = 18970.0; RangoAlto = 31000.0; Impuesto = 0.37; Base = 5901.0 }
-        { RangoBajo = 31000.0; RangoAlto = 999999.0; Impuesto = 0.39; Base = 10352.0 }
-    ]
-
-    // Encuentra el rango de impuestos correspondiente
-    let findTaxBracket uvt =
-        dianTable |> List.find (fun bracket -> uvt >= bracket.RangoBajo && uvt < bracket.RangoAlto)
-
-    // Calcula el impuesto basado en el rango
-    let calculateTax uvt bracket =
-        (uvt - bracket.RangoBajo) * bracket.Impuesto + bracket.Base
-
-    // Calcula el impuesto total en pesos
-    let calcularImpuesto uvt =
-        uvt |> findTaxBracket |> calculateTax uvt
-
-    // Ejemplo de cálculo de impuestos
-    let salario = 30000000.0 * 12.0
-    let tax = salario |> pesosToUvt |> calcularImpuesto |> uvtToPesos
-    printfn $"Total a pagar: {tax}"
+    1. 
 
 Refactoring
+    // Antes: Código imperativo
+    let sumaListaImperativa lista =
+        let mutable suma = 0
+        for elemento in lista do
+            suma <- suma + elemento
+        suma
+
+    // Después: Código funcional
+    let sumaListaFuncional lista =
+        List.fold (+) 0 lista
+
 Secuencias 
 Maping
 Cartas Uniones discriminadas
