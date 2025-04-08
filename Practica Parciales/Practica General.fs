@@ -14,8 +14,6 @@ Elementos esenciales:
             e. Juego de cartas
             f. Elecciones
 
-//──────────────────────────────────────────────────
-
 Tuplas: 
     let tupla = (1, "hola") //Creación
 
@@ -34,8 +32,6 @@ Tuplas:
 
     // Nota: Las tuplas tambien se identifican así: elemento1 * elemento2 en casos de Union discriminada. 
     //Para let puede escribirse sin parentesis 
-
-//──────────────────────────────────────────────────
 
 Listas:
     List.forAll // Verifica si todos los elementos de la lista cumplen una condición.
@@ -60,8 +56,6 @@ Listas:
     List.map // Aplica una función a cada elemento de la lista y devuelve una nueva lista.
     List.filter // Filtra los elementos de la lista según una condición.
     List.iter // Aplica una función a cada elemento de la lista sin devolver nada.
-
-//──────────────────────────────────────────────────
 
 Optionals y Uniones Discriminadas:
     
@@ -112,8 +106,6 @@ Optionals y Uniones Discriminadas:
             let opcion = Some(10)
             let resultado = opcion |> Option.map (fun x -> x * 2) // Resultado: Some(20)
 
-//──────────────────────────────────────────────────
-
 Records:
     
     Ejemplo 
@@ -126,8 +118,6 @@ Records:
     printfn $"Nombre: {persona1.Nombre}, Edad: {persona1.Edad}" //Acceso a las propiedades
 
     let persona2 = { persona1 with Edad = 35 } // Copia y modifica una propiedad
-
-//──────────────────────────────────────────────────
 
 Array (Arreglos):
 
@@ -196,7 +186,7 @@ Array (Arreglos):
 
 DIAN Ejemplo de una lista de Records:
 
-    // Hacemos conversión de UVT a pesos y viceversa
+    //Hacemos conversión de UVT a pesos y viceversa
     let uvtFactor = 47065.0
     let uvtToPesos x = x * uvtFactor
     let pesosToUvt x = x / uvtFactor
