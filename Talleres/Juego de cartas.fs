@@ -64,11 +64,11 @@ let baraja = [|
 |]
 
 
-let generarMano() =
+let generarMano2() =
     generarMuestra 5 0 51
     
 
-let r = generarMano()
+let r = generarMano2()
 
 r
 |> Seq.iter (fun i -> printfn $"{baraja[i]}")
@@ -277,3 +277,47 @@ let testMano =
     |> evaluarMano
 
 printfn $"Valor de la mano: {testMano}"
+
+
+
+
+
+// Generar una mano para un jugador
+let generarMano() =
+    generarMuestra 5 0 51
+    |> Seq.map (fun i -> baraja[i])
+    |> Seq.toList
+
+// Generar manos para varios jugadores
+let generarManos jugadores =
+    jugadores
+    |> List.map (fun jugador -> (jugador, generarMano()))
+
+// Evaluar y mostrar las manos de los jugadores
+let evaluarManos jugadores =
+    let manos = generarManos jugadores
+    manos
+    |> List.iter (fun (jugador, cartas) ->
+        let tipoMano = evaluarMano cartas
+        printfn $"{jugador} tiene {cartas} y su mano es {tipoMano}")
+    manos // Retornar las manos para determinar el ganador
+
+// Determinar el ganador
+let determinarGanador manos =
+    manos
+    |> List.map (fun (jugador, cartas) -> (jugador, cartas, evaluarMano cartas)) // Evaluar la mano de cada jugador
+    |> List.maxBy (fun (_, _, mano) -> mano) // Seleccionar la mano más alta
+
+// Función principal para simular el juego
+let jugarCartas () =
+    let jugadores = ["Jugador 1"; "Jugador 2"; "Jugador 3"; "Jugador 4"]
+    let manos = evaluarManos jugadores
+    let ganador = determinarGanador manos
+
+    // Mostrar el ganador
+    match ganador with
+    | (jugador, _, mano) ->
+        printfn $"El ganador es {jugador} con la mano {mano}"
+
+// Ejecutar el juego
+jugarCartas()
