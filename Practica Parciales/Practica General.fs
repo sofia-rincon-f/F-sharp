@@ -186,7 +186,101 @@ Array (Arreglos):
 
 DIAN Ejemplo de una lista de Records:
 
-    1. 
+    //
+    // Convertir de UVT a pesos
+    //
+
+    let uvtFactor = 47065.0
+    let uvtToPesos x =
+        x*uvtFactor
+    let pesosToUvt x =
+        x/uvtFactor
+
+    type TaxBrackets =
+        {
+            RangoBajo: float
+            RangoAlto: float
+            Impuesto: float
+            Base: float
+        }
+
+    let dianTable =
+        [
+            {
+                RangoBajo = 0.0
+                RangoAlto = 1090.0
+                Impuesto = 0.0
+                Base = 0.0
+            }
+            {
+                RangoBajo = 1090.0
+                RangoAlto = 1700.0
+                Impuesto = 0.19
+                Base = 0.0
+            }
+            {
+                RangoBajo = 1700.0
+                RangoAlto = 4100.0
+                Impuesto = 0.28
+                Base = 116.0
+            }
+            {
+                RangoBajo = 4100.0
+                RangoAlto = 8670.0
+                Impuesto = 0.33
+                Base = 788.0
+            }
+            {
+                RangoBajo = 8670.0
+                RangoAlto = 18970.0
+                Impuesto = 0.35
+                Base = 2296.0
+            }
+            {
+                RangoBajo = 18970.0
+                RangoAlto = 31000.0
+                Impuesto = 0.37
+                Base = 5901.0
+            }
+            {
+                RangoBajo = 31000.0
+                RangoAlto = 999999.0
+                Impuesto = 0.39
+                Base = 10352.0
+            }
+
+        ]
+
+    //
+    // Esta funcion busca en la tabla, comparando
+    // la uvt con el RangoBajo y el RangoAlto
+    //
+    let findTaxBracket uvt =
+        dianTable
+        |> List.find 
+            (fun bracket 
+                ->
+                uvt >= bracket.RangoBajo && uvt < bracket.RangoAlto
+            )
+
+
+    let calculateTax uvt bracket =
+        (uvt-bracket.RangoBajo)*bracket.Impuesto+bracket.Base
+
+    let calcularImpuesto uvt =
+        uvt
+        |> findTaxBracket
+        |> calculateTax uvt
+    let salario = 30000000.0*12.0
+
+
+    let tax =
+        salario
+        |> pesosToUvt
+        |> calcularImpuesto
+        |> uvtToPesos
+
+    printfn $"Total a pagar {tax}"
 
 Refactoring:
     // Antes: Código imperativo
@@ -239,9 +333,540 @@ Maping:
     printfn $"Números duplicados: {duplicados}"
     printfn $"Números como cadenas: {comoCadenas}"
 
-Cartas Uniones discriminadas
-Eleciones 
+    Cartas Uniones discriminadas
+
+    //
+    // A game of cards
+    //
+
+    //
+    // Este es un discriminated union
+    //
+    type Pinta =
+        | Corazones
+        | Diamantes
+        | Picas
+        | Treboles
+
+    type CartaDeJuego =
+        | As of Pinta
+        | Rey of Pinta
+        | Reina of Pinta
+        | Jack of Pinta
+        | CartaNumero of int * Pinta // Esta es una tupla
+
+    //
+    // Helper functions for the big homework
+    //
+
+    //
+    // Esta funcion nos retorna la pinta de cuaquier carta
+    //
+
+    let obtenerPintaDeCarta carta =
+        match carta with 
+        | As pinta -> pinta
+        | Rey pinta -> pinta
+        | Reina pinta -> pinta
+        | Jack pinta -> pinta
+        | CartaNumero(_,pinta) -> pinta
+
+    let result = obtenerPintaDeCarta (CartaNumero(10,Corazones))
+    printfn $"La pinta de la carta es: {result}"
+
+    //
+    // Funcion que chequea si una lista de cartas es de la misma
+    // pinta
+    //
+    let mismaPintaEnLista listaCartas =
+        //
+        // La pinta de muestra la sacamos del primer elemento de la lista
+        //
+        let pintaMuestra = listaCartas|> List.head |> obtenerPintaDeCarta
+
+        //
+        // Usamos forall para comprobar 
+        listaCartas
+        |> List.forall(fun e -> obtenerPintaDeCarta(e) = pintaMuestra)
+
+    let test = mismaPintaEnLista [As(Treboles);CartaNumero(10,Corazones);Rey(Treboles);CartaNumero(3,Corazones)]
+    printfn $"Misma pinta es {test}"
+
+    //
+    // Obtener valor de la carta, esto es util para
+    // ordernar la mano
+    //
+    let obtenerValorDeCarta carta =
+        match carta with
+        | CartaNumero(x,_) -> x
+        | Jack(_) -> 11
+        | Reina(_) -> 12
+        | Rey(_) -> 13
+        | As(_)-> 14
+
+
+    //
+    // Esta funcion da un valor arbitrario a cada suit
+    //
+
+    let obtenerValorDePinta carta =
+        match carta |> obtenerPintaDeCarta with
+        | Treboles -> 1
+        | Picas -> 2
+        | Corazones -> 3
+        | Diamantes -> 4
+
+    //
+    // Esta funcion compara dos cartas usando el standard
+    // de la funcion compare (-1,0,1)
+    //
+    // Esta funcion compara el suit primero, y luego el 
+    // valor de la carta
+    //
+    let compararCartas carta1 carta2 =
+        let pinta1 = carta1 |> obtenerValorDePinta
+        let pinta2 = carta2 |> obtenerValorDePinta
+    
+        let c1 = compare pinta1 pinta2
+        if c1 <> 0 
+            then
+                c1
+            else
+                let valor1 = carta1 |> obtenerValorDeCarta
+                let valor2 = carta2 |> obtenerValorDeCarta
+                compare valor1 valor2
+
+
+    //
+    // Ordenar las cartas es muy facil ahora, solo tenemos
+    // que usar nuestra funcion de comparación
+    //
+
+    let ordenarMano cartas =
+        cartas
+        |> List.sortWith compararCartas
+
+    let test2 = ordenarMano [As(Treboles);CartaNumero(10,Corazones);Rey(Treboles);CartaNumero(3,Corazones)]
+
+    printfn "Mano ordernada"
+    test2 |> List.iter (fun e -> printfn $"{e}")
+
+    //
+    // Necesitamos una funcion que  nos diga
+    // si una lista de cartas esta en secuencia.
+    // Se asume que la lista esta ordenada.
+    //
+    let esUnaSecuencia cartas =
+        cartas
+        // Solo nos interesa el valor de la carta
+        |> Seq.map obtenerValorDeCarta
+        //Pairwise retorna una tupla de dos elementos
+        |> Seq.pairwise
+        // Con los pares calculamos la diferencia 
+        |> Seq.map (fun (e1,e2) -> e2 - e1)
+        // Chequeamos que todos sean 1
+        |> Seq.forall (fun e -> e = 1)
+
+    let manoEjemplo = 
+        [
+            CartaNumero(8,Corazones)
+            CartaNumero(8,Treboles)
+            CartaNumero(8,Diamantes)
+            CartaNumero(9,Picas) 
+            CartaNumero(9,Diamantes)
+        ]
+    let testSecuencia = 
+        manoEjemplo
+        |> ordenarMano
+        |> esUnaSecuencia
+
+    printfn $"Resultado de secuencia: {testSecuencia}"
+
+
+    //
+    // Esta union de Mano, nos da el tipo y el valor
+    // a la vez (es el orden de la declaracion)
+    type Mano =
+        | Nada
+        | Pair
+        | TwoPairs
+        | ThreeOfAKind
+        | Straight
+        | Flush
+        | FullHouse 
+        | FourOfAKind
+        | StraightFlush
+        | RoyalFlush
+
+
+    //
+    // Esta funcion busca un tipo basico de mano
+    // las cartas deben ir en orden y tener la misma
+    // pinta
+    let encontrarTipoDeFlush cartas =
+        //
+        // Miremos si hay una sequencia
+        //
+        if cartas |> esUnaSecuencia then
+            match cartas |> List.head with
+            | CartaNumero(10,_) -> RoyalFlush
+            | _ -> StraightFlush
+        else
+            Flush
+
+
+    let testFlush = manoEjemplo |> ordenarMano |> encontrarTipoDeFlush
+    printfn $"Tipo de flush: {testFlush}"
+
+    //
+    // Esta funcion busca un Full House, y four of a kind.
+    // Esta funcion requiere que las cartas esten en orden.
+    //
+    let encontrarOtrasManos cartas =
+        if cartas |> esUnaSecuencia then
+                Straight
+            else
+                // Buscamos dos combinaciones, una de 3 y 2
+                // Y otrade 4 iguales.
+                match cartas 
+                    |> List.groupBy obtenerValorDeCarta
+                    |> List.sortBy (fun (_,e) -> e |> List.length) 
+                with
+                | [(_,[_]);(_,[_]);(_,[_]);(_,[_;_])] -> Pair
+                | [(_,[_;_]);(_,[_;_;_])] -> FullHouse
+                | [(_,[_]);(_,[_;_;_;_])] -> FourOfAKind
+                | _ -> Nada
+
+    //
+    // Implementacion parcial de evaluar mano.
+    // Esta es la funcion principal de la tarea,
+    // ya cubrimos 3 de los 5 casos con los Flush
+    // Solo queda implementar el resto.
+    //
+
+    let evaluarMano cartas =
+        let cartasOrdenadas = cartas |> ordenarMano
+        match cartasOrdenadas |> mismaPintaEnLista with
+        | true -> cartasOrdenadas |> encontrarTipoDeFlush
+        | false -> cartasOrdenadas |> encontrarOtrasManos
+
+    let testMano = manoEjemplo |> evaluarMano
+    printfn $"Valor de la mano: {testMano}"
+
+Eleciones:
+    type Candidato =
+        {
+            Cedula: int
+            Nombre: string
+            Partido: string
+        }
+
+    type EstadoVoto =
+        | Marcado
+        | EnBlanco
+
+    type Tarjeton =
+        {
+            EstadoUno: EstadoVoto
+            EstadoDos: EstadoVoto
+            EstadoTres: EstadoVoto
+        }
+
+    let candidatos =
+        [
+            {Cedula = 101; Nombre = "JFK"; Partido ="Democrata"}
+            {Cedula = 273; Nombre = "Guillermo Leon Valencia"; Partido="Liberal"}
+            {Cedula = 564; Nombre = "Ronald Reagan";Partido ="Republicano"}
+        ]
+
+    let resultados =
+        [
+            {EstadoUno = Marcado;EstadoDos=EnBlanco;EstadoTres=EnBlanco}
+            {EstadoUno = Marcado;EstadoDos=Marcado;EstadoTres=EnBlanco}
+            {EstadoUno = EnBlanco;EstadoDos=EnBlanco;EstadoTres=EnBlanco}
+            {EstadoUno = EnBlanco;EstadoDos=EnBlanco;EstadoTres=EnBlanco}
+            {EstadoUno = EnBlanco;EstadoDos=Marcado;EstadoTres=EnBlanco}
+            {EstadoUno = Marcado;EstadoDos=EnBlanco;EstadoTres=EnBlanco}
+            {EstadoUno = Marcado;EstadoDos=EnBlanco;EstadoTres=EnBlanco}
+            {EstadoUno = Marcado;EstadoDos=EnBlanco;EstadoTres=EnBlanco}
+            {EstadoUno = EnBlanco;EstadoDos=Marcado;EstadoTres=EnBlanco}
+            {EstadoUno = EnBlanco;EstadoDos=EnBlanco;EstadoTres=Marcado}
+            {EstadoUno = EnBlanco;EstadoDos=EnBlanco;EstadoTres=Marcado}
+            {EstadoUno = EnBlanco;EstadoDos=EnBlanco;EstadoTres=Marcado}
+            {EstadoUno = EnBlanco;EstadoDos=EnBlanco;EstadoTres=Marcado}
+            {EstadoUno = EnBlanco;EstadoDos=Marcado;EstadoTres=EnBlanco}
+            {EstadoUno = EnBlanco;EstadoDos=Marcado;EstadoTres=EnBlanco}
+            {EstadoUno = EnBlanco;EstadoDos=EnBlanco;EstadoTres=Marcado}
+        ]
+
+    type Resultado =
+        | CandidatoUno
+        | CandidatoDos
+        | CandidatoTres
+        | Invalido
+        | Blanco
+
+    let mapaCandidato = [(CandidatoUno,273);(CandidatoDos,564);(CandidatoTres,101)] |> Map.ofList
+
+    let resultadosIniciales =
+        [
+            CandidatoUno,0
+            CandidatoDos,0
+            CandidatoTres,0
+            Invalido,0
+            Blanco,0
+        ]
+        |> Map.ofList
+
+    let incrementarVoto acumulador (key:Resultado) =
+        let total = acumulador |> Map.find key
+        acumulador |> Map.add key (total+1)
+
+    let procesarVoto acumulador voto =
+        let incremente = incrementarVoto acumulador
+
+        match voto.EstadoUno,voto.EstadoDos,voto.EstadoTres with
+        | EnBlanco,EnBlanco,EnBlanco -> incremente Blanco
+        | Marcado, EnBlanco,EnBlanco -> incremente CandidatoUno
+        | EnBlanco,Marcado,EnBlanco -> incremente CandidatoDos
+        | EnBlanco,EnBlanco,Marcado -> incremente CandidatoTres
+        | _ -> incremente Invalido
+
+    let totalizarVotos votos =
+        votos
+        |> List.fold procesarVoto resultadosIniciales
+
+    let encontrarInformacionCandidato key =
+        mapaCandidato 
+        |> Map.find key
+        |> fun cedula ->
+            candidatos |> List.find (fun r -> r.Cedula = cedula)
+        
+
+    let convertirANombreYVotos (key,votos) =
+    match key with
+            | Blanco -> "En Blanco",votos
+            | Invalido -> "Voto Invalido",votos
+            | _ -> 
+                    let info = encontrarInformacionCandidato key
+                    info.Nombre+" ** "+info.Partido,votos 
+
+    resultados
+    |> totalizarVotos
+    |> Map.toArray
+    |> Array.sortByDescending (fun (_,votos) -> votos)
+    |> Array.map convertirANombreYVotos
+    |> Array.iter (fun (nombre,votos) -> printfn $"{nombre} -> {votos}" )
 
 Ejemplo paises 
+   
     //Con listas de tuplas
+        let numeros = [5.001; 4.998; 5.002; 4.998]
+
+        let sumLista lista = 
+            lista 
+            |> List.fold (fun acc e -> acc+e) 0.0 
+
+        //
+        // Sigmasquare without let
+        //
+        let sigmaSquare (lista: float list) =
+            lista
+            |> sumLista
+            |> fun e -> e/float lista.Length
+            |> fun mean ->
+                lista 
+                |> List.map (fun e -> (e-mean)*(e-mean))
+            |> sumLista
+            |> fun e -> e/float lista.Length
+
+            
+        let sigma = numeros |> sigmaSquare |> sqrt
+        printfn $"Standard Deviation is {sigma}"
+
+
+
+
+        // Taller calificable
+
+        //Punto 1 Agregar población
+
+        let atlas =
+            [ ("Colombia", "Bogota", 52320000)
+            ("Francia", "Paris", 68290000)
+            ("España", "Madrid", 48350000)
+            ("Azerbaiyán", "Baku", 10150000)
+            ("Alemania", "Berlin", 83280000) 
+            ("Japon","Tokyo", 124500000)
+            ]
+
+
+        // Punto 2 BuscarCapital con tryFind
+
+        let buscarCapital pais =
+            atlas 
+            |> List.tryFind (fun (p,_,_) -> p = pais)
+            |> Option.map (fun (_,c,_) -> c)
+
+
+
+        let pais = "Japon"
+        match pais |> buscarCapital with
+        | Some nombre -> printfn $"{nombre}"
+        | None -> printfn "No existe ese pais"
+
+
+
+        //Punto 3 Buscar número de haitantes
+
+        let buscarHabitantes pais2 =  
+            match atlas |> List.tryFind (fun (p,_,_) -> p = pais2) with
+            | Some ((_,_,h)) -> h
+            | None -> 
+                printfn $"No se encontro número de habitantes"
+                0
+
+
+        let pais2 = "Japon"
+        let result2 = buscarHabitantes pais2
+
+        printfn $"El numerro de habitantes de {pais2} es {result2}"
+
+        // Punto 4 Odernar paises por tamaño de población 
+
+
+
+        let obtenerlista () =
+            atlas
+            |> List.sortBy (fun (_,_,habitantes) -> habitantes)
+            |> List.map (fun (pais,_,_) -> pais)
+
+        let imprimir = obtenerlista ()
+
+        printfn $"{imprimir}"
+
+
+        // Punto 5 Imprimir paises dentro de un limite establecido de habitantes
+
+        let limite lim =
+            atlas 
+            |> List.filter (fun (_,_,habitantes) -> (habitantes >= lim))
+            |> List.map (fun (pais,_,_) -> pais)
+
+        let imprimirlimite = limite 50000000
+
+        printfn $"{imprimirlimite}"
     //Con listas de records
+        type Atlas = {
+            Pais: string
+            Capital: string
+            Habitantes: int
+            Pib: float //field
+        }
+
+        let atlas =
+            [ 
+                {
+                    Pais = "Colombia"
+                    Capital = "Bogota"
+                    Habitantes = 52320000
+                    Pib = 363.5
+                }
+                {
+                    Pais = "Francia" 
+                    Capital = "Paris"
+                    Habitantes = 68290000
+                    Pib = 3052.0
+                }
+                {
+                    Pais = "España" 
+                    Capital = "Madrid" 
+                    Habitantes = 48350000
+                    Pib = 1620.0
+                }
+                {
+                    Pais = "Azerbaiyán" 
+                    Capital = "Baku"
+                    Habitantes = 10150000
+                    Pib = 72.36
+                }
+                {
+                    Pais = "Alemania" 
+                    Capital = "Berlin"; 
+                    Habitantes = 83280000
+                    Pib = 4520.0
+                }
+                {
+                    Pais = "Japon"; 
+                    Capital = "Tokyo"; 
+                    Habitantes = 124500000
+                    Pib = 4204.0
+                }
+            ]
+
+        let elemento = atlas[1]
+        let nuevoPais = { elemento with Habitantes = 78290000; Pib =8000.0}
+        printfn $"El pais es: {nuevoPais.Pais} {nuevoPais.Habitantes}"
+
+        let buscarCapital pais =
+            match atlas |> List.tryFind (fun r -> r.Pais = pais) with
+            | Some(r) -> r.Capital
+            | None ->
+                printfn $"Capital No encontrada!"
+                ""
+
+
+        let pais = "Alemania"
+        let result = buscarCapital pais
+
+        printfn $"La capital de {pais} es {result}"
+
+
+        //Punto 3 Buscar número de haitantes
+
+        let buscarHabitantes pais =  
+            match atlas |> List.tryFind (fun r -> r.Pais = pais) with
+            | Some (r) -> r.Habitantes
+            | None -> 
+                printfn $"No se encontro número de habitantes"
+                0
+
+
+        let pais2 = "Japon"
+        let result2 = buscarHabitantes pais2
+
+        printfn $"El numerro de habitantes de {pais2} es {result2}"
+
+        // Punto 4 Odernar paises por tamaño de población 
+
+
+
+        let obtenerlista () =
+            atlas
+            |> List.sortBy (fun r -> r.Habitantes)
+            |> List.map (fun r -> r.Pais)
+
+        let imprimir = obtenerlista ()
+
+        printfn $"{imprimir}"
+
+
+        // Punto 5 Imprimir paises dentro de un limite establecido de habitantes
+
+        let limite lim =
+            atlas 
+            |> List.filter (fun r -> (r.Habitantes >= lim))
+            |> List.map (fun r -> r.Pais)
+
+        let imprimirlimite = limite 50000000
+
+        printfn $"{imprimirlimite}"
+
+        let ordenarPorPib () =
+            atlas
+            |> List.sortBy (fun r -> r.Pib)
+            |> List.map (fun r -> r.Pais)
+            |> List.rev
+
+        let bigCountries = ordenarPorPib ()
+        printfn $"{bigCountries}"
