@@ -282,6 +282,7 @@ DIAN Ejemplo de una lista de Records:
 
     printfn $"Total a pagar {tax}"
 
+//──────────────────────── ୨୧ ──────────────────────────
 Refactoring:
     // Antes: Código imperativo
     let sumaListaImperativa lista =
@@ -294,6 +295,7 @@ Refactoring:
     let sumaListaFuncional lista =
         List.fold (+) 0 lista
 
+//──────────────────────── ୨୧ ──────────────────────────
 Secuencias:
     // Ejemplo de secuencias (Seq)
 
@@ -317,6 +319,7 @@ Secuencias:
     printfn $"Mayores a 5: {mayoresA5 |> Seq.toList}"
     printfn $"Duplicados: {duplicados |> Seq.toList}"
 
+//──────────────────────── ୨୧ ──────────────────────────
 Maping:
     // Ejemplo de mapeo (Mapping)
 
@@ -553,6 +556,7 @@ Maping:
     let testMano = manoEjemplo |> evaluarMano
     printfn $"Valor de la mano: {testMano}"
 
+//──────────────────────── ୨୧ ──────────────────────────
 Eleciones:
     type Candidato =
         {
@@ -658,6 +662,7 @@ Eleciones:
     |> Array.map convertirANombreYVotos
     |> Array.iter (fun (nombre,votos) -> printfn $"{nombre} -> {votos}" )
 
+//──────────────────────── ୨୧ ──────────────────────────
 Ejemplo paises 
    
     //Con listas de tuplas
@@ -756,6 +761,7 @@ Ejemplo paises
         let imprimirlimite = limite 50000000
 
         printfn $"{imprimirlimite}"
+    //──────────────────────── ୨୧ ──────────────────────────
     //Con listas de records
         type Atlas = {
             Pais: string
