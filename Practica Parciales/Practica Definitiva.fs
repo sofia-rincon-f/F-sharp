@@ -264,3 +264,115 @@ let totalizar cuentas =
 let dolarizado = totalizar cuentas
 
 printfn $"\n{dolarizado}"
+
+
+──────────────────────── ୨୧ ──────────────────────────
+
+// EJEMPLO DE CARTAS MÁS RESUMIDO 
+
+type Pinta = // Union discriminada
+    | Corazones
+    | Diamantes
+    | Picas
+    | Treboles
+
+type CartaDeJuego = // Union discriminada
+    | As of Pinta
+    | Rey of Pinta
+    | Reina of Pinta
+    | Jack of Pinta
+    | CartaNumero of int * Pinta
+
+
+let obtenerPintaDeCarta carta = // Esta funcion nos retorna la pinta de cuaquier carta
+    match carta with 
+    | As pinta -> pinta
+    | Rey pinta -> pinta
+    | Reina pinta -> pinta
+    | Jack pinta -> pinta
+    | CartaNumero(_,pinta) -> pinta
+
+let mismaPintaEnLista listaCartas = // Funcion que chequea si una lista de cartas es de la misma pinta
+    let pintaMuestra = listaCartas|> List.head |> obtenerPintaDeCarta
+    listaCartas
+    |> List.forall(fun e -> obtenerPintaDeCarta(e) = pintaMuestra)
+
+
+let obtenerValorDeCarta carta = // Obtener valor de la carta, esto es util para ordernar la mano
+    match carta with
+    | CartaNumero(x,_) -> x
+    | Jack(_) -> 11
+    | Reina(_) -> 12
+    | Rey(_) -> 13
+    | As(_)-> 14
+
+let obtenerValorDePinta carta = // Obtener valor de la pinta, esto es util para ordernar la mano
+    match carta |> obtenerPintaDeCarta with
+    | Treboles -> 1
+    | Picas -> 2
+    | Corazones -> 3
+    | Diamantes -> 4
+
+let compararCartas carta1 carta2 = // Esta funcion da un valor arbitrario a cada suit
+    let pinta1 = carta1 |> obtenerValorDePinta
+    let pinta2 = carta2 |> obtenerValorDePinta
+  
+    let c1 = compare pinta1 pinta2
+    if c1 <> 0 
+        then
+            c1
+        else
+            let valor1 = carta1 |> obtenerValorDeCarta
+            let valor2 = carta2 |> obtenerValorDeCarta
+            compare valor1 valor2
+
+let ordenarMano cartas = 
+    cartas |> List.sortWith compararCartas
+
+let esUnaSecuencia2 cartas = //funcion más eficiente
+    cartas 
+    |> Seq.map obtenerValorDeCarta 
+    |> Seq.pairwise 
+    |> Seq.map (fun (e1, e2) -> e2-e1) 
+    |> Seq.forall (fun e -> e=1) 
+
+type Mano = // Esta es la union discriminada que representa el tipo de mano
+    | Nada
+    | Pair
+    | TwoPairs
+    | ThreeOfAKind
+    | Straight
+    | Flush
+    | FullHouse 
+    | FourOfAKind
+    | StraightFlush
+    | RoyalFlush
+
+let encontrarTipoDeFlush cartas = // Esta funcion nos dice si la mano es un flush o no
+    if cartas |> esUnaSecuencia then
+        match cartas |> List.head with
+        | CartaNumero(10,_) -> RoyalFlush
+        | _ -> StraightFlush
+    else
+        Flush
+
+let encontrarOtrasManos cartas = // Esta funcion nos dice si la mano es un flush o no
+    if cartas |> esUnaSecuencia then
+            Straight
+        else
+            match cartas 
+                |> List.groupBy obtenerValorDeCarta
+                |> List.sortBy (fun (_,e) -> e |> List.length) 
+            with
+            | [(_,[_]);(_,[_]);(_,[_]);(_,[_;_])] -> Pair
+            | [(_,[_;_]);(_,[_;_;_])] -> FullHouse
+            | [(_,[_]);(_,[_;_;_;_])] -> FourOfAKind
+            | _ -> Nada
+
+let evaluarMano cartas = // Esta funcion nos dice si la mano es un flush o no
+    let cartasOrdenadas = cartas |> ordenarMano
+    match cartasOrdenadas |> mismaPintaEnLista with
+    | true -> cartasOrdenadas |> encontrarTipoDeFlush
+    | false -> cartasOrdenadas |> encontrarOtrasManos
+
+
