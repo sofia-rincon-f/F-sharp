@@ -1,0 +1,27 @@
+Filesystem: Un filesystem, o sistema de archivos, es la estructura que organiza 
+y gestiona los archivos y directorios en un dispositivo de almacenamiento. En esencia, 
+es la forma en que un sistema operativo controla cómo los datos se escriben, se almacenan, 
+se recuperan y se organizan en un disco duro, SSD o cualquier otro medio de almacenamiento. 
+
+        Ejemplo: NTFS (Windows), APFS (macOS), HFS+ (macOS), y ext4 (Linux)
+
+Storage Area: Un "storage area" (área de almacenamiento) se refiere a un espacio, físico o virtual, designado para guardar datos. Puede ser un disco duro, una unidad de estado sólido, una red de almacenamiento, o incluso un entorno de almacenamiento en la nube. 
+
+        Ejemplo:
+        Web based como fable
+ 
+
+Base de datos: Una base de datos es una colección organizada de información, generalmente almacenada electrónicamente, que se utiliza para guardar, recuperar y gestionar datos de manera eficiente. Es como un archivo digital estructurado donde se puede almacenar, actualizar y buscar información. 
+        Ejemplo:   
+        dotNet
+        MySql 
+        Sql
+    Bases de datos relacionales.
+
+
+Cloud: Se refiere a una red de servidores remotos que están conectados para funcionar como un único ecosistema. Estos servidores se utilizan para almacenar y administrar datos, ejecutar aplicaciones, o entregar contenido y servicios, como el streaming de videos, correo web, software de ofimática o redes sociales. 
+
+        Ejemplos: 
+        Google storage
+        Firebase storage
+
